@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/header') %>
+<main>
+  <section class="error-page">
+    <div class="wrap" style="max-width:600px;">
+      <p class="error-page__code">ERROR 404</p>
+      <h1>This page isn't in the drawing set.</h1>
+      <p>The page you're looking for doesn't exist or may have moved. Check the address, or head back to the homepage.</p>
+      <a href="/" class="btn btn--amber btn--lg" style="margin-top:12px;">
+        Back to Home
+        <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+      </a>
+    </div>
+  </section>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

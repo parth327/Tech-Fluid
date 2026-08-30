@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" role="img" aria-labelledby="ctitle">
+  <title id="ctitle">Excavator on a construction site, representing earthmoving hydraulic cylinders</title>
+  <defs>
+    <linearGradient id="cSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#17233B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="cGround" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="280" fill="url(#cSky)"/>
+  <circle cx="336" cy="56" r="30" fill="#F97316" opacity="0.16"/>
+  <circle cx="336" cy="56" r="16" fill="#F97316" opacity="0.3"/>
+
+  <!-- distant hills -->
+  <path d="M0 190 Q70 160 150 185 T 300 178 T 400 190 V280 H0 Z" fill="#1E293B"/>
+  <!-- ground -->
+  <path d="M0 214 H400 V280 H0 Z" fill="url(#cGround)"/>
+  <path d="M0 214 H400" stroke="#F97316" stroke-width="1.5" opacity="0.5"/>
+
+  <!-- excavator tracks -->
+  <rect x="60" y="205" width="112" height="20" rx="10" fill="#0B1220" stroke="#475569" stroke-width="2"/>
+  <circle cx="78" cy="215" r="9" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+  <circle cx="154" cy="215" r="9" fill="none" stroke="#94A3B8" stroke-width="2.5"/>
+  <circle cx="104" cy="215" r="6" fill="none" stroke="#94A3B8" stroke-width="2"/>
+  <circle cx="128" cy="215" r="6" fill="none" stroke="#94A3B8" stroke-width="2"/>
+
+  <!-- cab / body -->
+  <rect x="72" y="164" width="70" height="42" rx="4" fill="#F1F5F9"/>
+  <rect x="80" y="172" width="26" height="20" rx="2" fill="#0F172A" opacity="0.65"/>
+  <rect x="66" y="196" width="86" height="12" rx="2" fill="#CBD5E1"/>
+
+  <!-- boom + stick + bucket (hydraulic arm chain) -->
+  <path d="M118 176 L214 118" stroke="#F97316" stroke-width="9" stroke-linecap="round"/>
+  <path d="M214 118 L246 168" stroke="#F97316" stroke-width="9" stroke-linecap="round"/>
+  <path d="M246 168 L206 190 L214 206 L262 198 Z" fill="#FDBA74" stroke="#F97316" stroke-width="2" stroke-linejoin="round"/>
+
+  <!-- hydraulic cylinder detail on the boom (the point of the picture) -->
+  <rect x="140" y="150" width="46" height="12" rx="4" fill="#0F172A" stroke="#FFFFFF" stroke-width="2" transform="rotate(-33 140 150)"/>
+  <circle cx="118" cy="176" r="5" fill="#0F172A" stroke="#FFFFFF" stroke-width="1.5"/>
+  <circle cx="214" cy="118" r="5" fill="#0F172A" stroke="#FFFFFF" stroke-width="1.5"/>
+
+  <!-- dust / motion accent -->
+  <path d="M270 210 q10 -8 22 0 q10 -8 22 0" stroke="#94A3B8" stroke-width="2" fill="none" opacity="0.45" stroke-linecap="round"/>
+  <path d="M285 220 q10 -8 22 0 q10 -8 22 0" stroke="#94A3B8" stroke-width="2" fill="none" opacity="0.3" stroke-linecap="round"/>
+</svg>

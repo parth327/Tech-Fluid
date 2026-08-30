@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= pageTitle %></title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="icon" href="/images/favicon.svg" type="image/svg+xml">
+</head>
+<body class="admin-body">
+
+  <div class="admin-topbar">
+    <div class="wrap admin-topbar__inner">
+      <div class="admin-topbar__brand">
+        Tech Fluid Industries <span class="tag">RFQ ADMIN</span>
+      </div>
+      <form method="POST" action="/admin/logout">
+        <button type="submit" class="btn btn--outline btn--sm">Log Out</button>
+      </form>
+    </div>
+  </div>
+
+  <main class="admin-main">
+    <div class="wrap">
+
+      <div class="admin-header-row">
+        <h1 style="font-size:1.6rem; margin:0;">RFQ Leads</h1>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <div class="admin-category-mix">
+            <div class="admin-category-mix__title">Demand Mix</div>
+            <% const catTotal = categories.reduce((s, c) => s + c.count, 0) || 1; %>
+            <% categories.forEach(function(c) { %>
+            <div class="admin-category-mix__row">
+              <span class="admin-category-mix__label"><%= c.product_category %></span>
+              <span class="admin-category-mix__bar-wrap"><span class="admin-category-mix__bar" style="width:<%= Math.round((c.count / catTotal) * 100) %>%"></span></span>
+              <span class="admin-category-mix__count"><%= c.count %></span>
+            </div>
+            <% }); %>
+          </div>
+          <div class="admin-sparkline" title="Leads received, last 14 days">
+            <svg viewBox="0 0 140 36" class="admin-sparkline__svg" aria-hidden="true">
+              <%
+                const maxCount = Math.max(1, ...daily.map(d => d.count));
+                const points = daily.map((d, i) => {
+                  const x = (i / (daily.length - 1)) * 136 + 2;
+                  const y = 32 - (d.count / maxCount) * 28;
+                  return x.toFixed(1) + ',' + y.toFixed(1);
+                }).join(' ');
+              %>
+              <polyline points="<%= points %>" fill="none" stroke="#F97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <% daily.forEach((d, i) => {
+                const x = (i / (daily.length - 1)) * 136 + 2;
+                const y = 32 - (d.count / maxCount) * 28;
+              %>
+                <circle cx="<%= x.toFixed(1) %>" cy="<%= y.toFixed(1) %>" r="<%= d.count > 0 ? 2 : 0 %>" fill="#F97316"/>
+              <% }); %>
+            </svg>
+            <span class="admin-sparkline__label">Last 14 days</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-counts">
+        <a href="/admin<%= search ? `?q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card <%= !activeStatus ? 'is-active' : '' %>">
+          <span class="admin-count-card__value"><%= counts.total %></span>
+          <span class="admin-count-card__label">All</span>
+        </a>
+        <a href="/admin?status=new<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card <%= activeStatus === 'new' ? 'is-active' : '' %>">
+          <span class="admin-count-card__value"><%= counts.new %></span>
+          <span class="admin-count-card__label">New</span>
+        </a>
+        <a href="/admin?status=contacted<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card <%= activeStatus === 'contacted' ? 'is-active' : '' %>">
+          <span class="admin-count-card__value"><%= counts.contacted %></span>
+          <span class="admin-count-card__label">Contacted</span>
+        </a>
+        <a href="/admin?status=quoted<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card <%= activeStatus === 'quoted' ? 'is-active' : '' %>">
+          <span class="admin-count-card__value"><%= counts.quoted %></span>
+          <span class="admin-count-card__label">Quoted</span>
+        </a>
+        <a href="/admin?status=closed<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card <%= activeStatus === 'closed' ? 'is-active' : '' %>">
+          <span class="admin-count-card__value"><%= counts.closed %></span>
+          <span class="admin-count-card__label">Closed</span>
+        </a>
+      </div>
+
+      <div class="admin-toolbar">
+        <form method="GET" action="/admin" class="admin-search" role="search">
+          <% if (activeStatus) { %><input type="hidden" name="status" value="<%= activeStatus %>"><% } %>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-quote"/></svg>
+          <input type="search" name="q" id="search-input" placeholder="Search name, email, phone or company… (press /)" value="<%= search %>" aria-label="Search leads">
+          <% if (search) { %><a href="/admin<%= activeStatus ? `?status=${activeStatus}` : '' %>" class="admin-search__clear" aria-label="Clear search">&times;</a><% } %>
+        </form>
+        <a href="/admin/export.csv<%= activeStatus || search ? '?' : '' %><%= activeStatus ? `status=${activeStatus}` : '' %><%= activeStatus && search ? '&' : '' %><%= search ? `q=${encodeURIComponent(search)}` : '' %>" class="btn btn--ghost btn--sm">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-download"/></svg>
+          Export CSV
+        </a>
+      </div>
+
+      <div id="admin-toast-stack" class="admin-toast-stack" aria-live="polite"></div>
+
+      <div class="admin-bulk-bar" id="bulk-bar">
+        <span class="admin-bulk-bar__count"><span id="bulk-count">0</span> selected</span>
+        <div class="admin-bulk-bar__actions">
+          <select id="bulk-status-select">
+            <option value="">Change status to…</option>
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="quoted">Quoted</option>
+            <option value="closed">Closed</option>
+          </select>
+          <button type="button" class="admin-delete-btn" id="bulk-delete-btn" style="background:rgba(220,38,38,0.15); border-color:rgba(220,38,38,0.4); color:#FCA5A5;">Delete Selected</button>
+          <button type="button" class="admin-bulk-bar__clear" id="bulk-clear-btn">Clear</button>
+        </div>
+      </div>
+
+      <% if (leads.length === 0) { %>
+        <div class="admin-empty">
+          <svg class="icon icon--lg" aria-hidden="true"><use href="#icon-quote"/></svg>
+          <p>No RFQ leads<%= activeStatus ? ` with status "${activeStatus}"` : '' %><%= search ? ` matching "${search}"` : '' %> yet.</p>
+        </div>
+      <% } else {
+        function sortLink(col, label) {
+          const nextDir = (sort === col && dir === 'asc') ? 'desc' : 'asc';
+          const qs = new URLSearchParams();
+          if (activeStatus) qs.set('status', activeStatus);
+          if (search) qs.set('q', search);
+          qs.set('sort', col);
+          qs.set('dir', nextDir);
+          const arrow = sort === col ? (dir === 'asc' ? '&uarr;' : '&darr;') : '';
+          return `<a href="/admin?${qs.toString()}">${label} <span class="sort-arrow">${arrow}</span></a>`;
+        }
+      %>
+
+      <!-- Desktop table -->
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th class="checkbox-col"><input type="checkbox" class="admin-select-all" id="select-all" aria-label="Select all leads on this page"></th>
+              <th><%- sortLink('created_at', 'Received') %></th>
+              <th><%- sortLink('name', 'Contact') %></th>
+              <th>Phone</th>
+              <th><%- sortLink('product_category', 'Category') %></th>
+              <th>Spec</th>
+              <th><%- sortLink('status', 'Status') %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% leads.forEach(function(lead) { %>
+            <tr class="admin-lead-row" data-lead-id="<%= lead.id %>">
+              <td class="checkbox-col"><input type="checkbox" class="admin-row-check" value="<%= lead.id %>" aria-label="Select lead <%= lead.name %>"></td>
+              <td style="white-space:nowrap; color:var(--steel-light);">
+                <%= new Date(lead.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %><br>
+                <span style="font-size:0.76rem;"><%= new Date(lead.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) %></span>
+              </td>
+              <td>
+                <strong><%= lead.name %></strong><% if (lead.company) { %><br><span style="color:var(--steel-light); font-size:0.82rem;"><%= lead.company %></span><% } %>
+              </td>
+              <td>
+                <a href="tel:<%= lead.phone %>" class="admin-call-link">
+                  <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-phone"/></svg>
+                  <%= lead.phone %>
+                </a>
+              </td>
+              <td><%= lead.product_category %></td>
+              <td class="admin-table__spec">
+                <% if (lead.bore) { %>Bore: <%= lead.bore %><br><% } %>
+                <% if (lead.stroke) { %>Stroke: <%= lead.stroke %><br><% } %>
+                <% if (lead.pressure) { %>Pressure: <%= lead.pressure %><% } %>
+              </td>
+              <td>
+                <select class="status-select js-status-select" data-status="<%= lead.status %>" data-lead-id="<%= lead.id %>">
+                  <option value="new" <%= lead.status === 'new' ? 'selected' : '' %>>New</option>
+                  <option value="contacted" <%= lead.status === 'contacted' ? 'selected' : '' %>>Contacted</option>
+                  <option value="quoted" <%= lead.status === 'quoted' ? 'selected' : '' %>>Quoted</option>
+                  <option value="closed" <%= lead.status === 'closed' ? 'selected' : '' %>>Closed</option>
+                </select>
+              </td>
+              <td>
+                <button type="button" class="admin-icon-btn js-toggle-detail" data-lead-id="<%= lead.id %>" aria-expanded="false" aria-label="View details">
+                  <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+                </button>
+              </td>
+            </tr>
+            <tr class="admin-detail-row" id="detail-<%= lead.id %>" hidden>
+              <td colspan="8">
+                <%- include('partials/admin-lead-detail', { lead: lead }) %>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile cards -->
+      <div class="admin-card-list">
+        <% leads.forEach(function(lead) { %>
+        <div class="admin-lead-card">
+          <div class="admin-lead-card__head">
+            <label style="display:flex; align-items:flex-start; gap:10px;">
+              <input type="checkbox" class="admin-row-check" value="<%= lead.id %>" aria-label="Select lead <%= lead.name %>" style="margin-top:3px;">
+              <span>
+                <strong><%= lead.name %></strong>
+                <% if (lead.company) { %><span class="admin-lead-card__company"><%= lead.company %></span><% } %>
+              </span>
+            </label>
+            <span class="status-select" data-status="<%= lead.status %>" data-lead-id="<%= lead.id %>" style="pointer-events:none;"><%= lead.status %></span>
+          </div>
+          <div class="admin-lead-card__meta">
+            <%= new Date(lead.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) %>
+            &middot; <%= lead.product_category %>
+          </div>
+          <div class="admin-lead-card__actions">
+            <a href="tel:<%= lead.phone %>" class="admin-call-link admin-call-link--block">
+              <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-phone"/></svg>
+              Call <%= lead.phone %>
+            </a>
+          </div>
+          <button type="button" class="admin-icon-btn js-toggle-detail" data-lead-id="mobile-<%= lead.id %>" aria-expanded="false" style="margin-top:8px;">
+            View &amp; manage
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+          </button>
+          <div class="admin-detail-row admin-detail-row--mobile" id="detail-mobile-<%= lead.id %>" hidden>
+            <%- include('partials/admin-lead-detail', { lead: lead }) %>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+
+      <% } %>
+
+      <% if (totalPages > 1) { %>
+      <div class="admin-pagination">
+        <% for (let p = 1; p <= totalPages; p++) { %>
+          <% const qs = (activeStatus ? `status=${activeStatus}&` : '') + `page=${p}` + (search ? `&q=${encodeURIComponent(search)}` : '') + `&sort=${sort}&dir=${dir}`; %>
+          <% if (p === page) { %>
+            <span class="is-current"><%= p %></span>
+          <% } else { %>
+            <a href="/admin?<%= qs %>"><%= p %></a>
+          <% } %>
+        <% } %>
+      </div>
+      <% } %>
+    </div>
+  </main>
+
+  <!-- Delete confirmation modal -->
+  <div class="admin-modal" id="delete-modal" hidden>
+    <div class="admin-modal__backdrop js-close-modal"></div>
+    <div class="admin-modal__card" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+      <h2 id="delete-modal-title">Delete this lead?</h2>
+      <p>This permanently removes the RFQ and cannot be undone.</p>
+      <div class="admin-modal__actions">
+        <button type="button" class="btn btn--ghost js-close-modal">Cancel</button>
+        <button type="button" class="btn btn--amber" id="confirm-delete-btn" style="background:#DC2626; color:#fff;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bulk delete confirmation modal -->
+  <div class="admin-modal" id="bulk-delete-modal" hidden>
+    <div class="admin-modal__backdrop js-close-bulk-modal"></div>
+    <div class="admin-modal__card" role="dialog" aria-modal="true" aria-labelledby="bulk-delete-modal-title">
+      <h2 id="bulk-delete-modal-title">Delete <span id="bulk-delete-count">0</span> leads?</h2>
+      <p>This permanently removes all selected RFQs and cannot be undone.</p>
+      <div class="admin-modal__actions">
+        <button type="button" class="btn btn--ghost js-close-bulk-modal">Cancel</button>
+        <button type="button" class="btn btn--amber" id="confirm-bulk-delete-btn" style="background:#DC2626; color:#fff;">Delete All</button>
+      </div>
+    </div>
+  </div>
+
+  <%- include('partials/icons') %>
+  <script src="/js/admin.js" defer></script>
+</body>
+</html>

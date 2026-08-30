@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<%- include('partials/header') %>
+
+<main id="main">
+
+  <section class="about-hero">
+    <div class="wrap about-hero__inner">
+      <%- include('partials/breadcrumb') %>
+      <p class="eyebrow eyebrow--light">Product Range</p>
+      <h1>Cylinders, power packs and jacks — specified, not selected off a shelf.</h1>
+      <p class="lead">Every product below ships only after it's built and tested to the bore, stroke, pressure and mounting your application needs.</p>
+    </div>
+  </section>
+
+  <section class="section" aria-label="Product categories">
+    <div class="wrap">
+      <div class="tab-list" role="tablist" aria-label="Product categories">
+        <% products.forEach(function(p) { %>
+        <button
+          type="button"
+          role="tab"
+          data-tab-target="<%= p.slug %>"
+          class="<%= p.slug === activeSlug ? 'is-active' : '' %>"
+          aria-selected="<%= p.slug === activeSlug %>">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-<%= p.icon %>"/></svg>
+          <%= p.tabLabel %>
+        </button>
+        <% }); %>
+      </div>
+
+      <% products.forEach(function(p) { %>
+      <div class="product-panel <%= p.slug === activeSlug ? 'is-active' : '' %>" data-tab-panel="<%= p.slug %>">
+        <div class="product-card">
+          <div class="product-card__visual">
+            <svg class="product-card__illus" viewBox="0 0 320 190" role="img" aria-label="<%= p.name %> illustration"><use href="#illus-<%= p.icon %>"/></svg>
+          </div>
+          <div class="product-card__grid">
+          <div>
+            <div class="product-card__icon">
+              <svg class="icon icon--lg" aria-hidden="true"><use href="#icon-<%= p.icon %>"/></svg>
+            </div>
+            <h2><%= p.name %></h2>
+            <p style="color:var(--steel-light); font-size:1.02rem;"><%= p.description %></p>
+            <div class="product-card__variants">
+              <% p.variants.forEach(function(v) { %>
+                <span><%= v %></span>
+              <% }); %>
+            </div>
+            <a href="/contact?category=<%= p.slug %>" class="btn btn--amber">
+              Request a Quote for <%= p.tabLabel %>
+              <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+            </a>
+          </div>
+
+          <dl class="spec-sheet">
+            <% p.specs.forEach(function(s) { %>
+            <div class="spec-sheet__row">
+              <dt><%= s.label %></dt>
+              <dd><%= s.value %></dd>
+            </div>
+            <% }); %>
+          </dl>
+          </div>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </section>
+
+  <section class="section section--light" aria-labelledby="custom-heading">
+    <div class="wrap" style="text-align:center;">
+      <p class="eyebrow" style="justify-content:center;">Don't See Your Spec?</p>
+      <h2 id="custom-heading" style="max-width:640px; margin-left:auto; margin-right:auto;">
+        Most of what we build is custom in the first place.
+      </h2>
+      <p style="max-width:60ch; margin:16px auto 28px; color:var(--steel-light);">
+        Send us your bore, stroke, working pressure or tonnage requirement and our
+        engineering team will confirm feasibility and lead time within one business day.
+      </p>
+      <a href="/contact" class="btn btn--navy btn--lg">
+        Start a Custom Request
+        <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

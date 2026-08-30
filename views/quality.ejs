@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<%- include('partials/header') %>
+
+<main id="main">
+
+  <section class="about-hero">
+    <div class="wrap about-hero__inner">
+      <%- include('partials/breadcrumb') %>
+      <p class="eyebrow eyebrow--light">Quality &amp; Testing</p>
+      <h1>Every unit is proven before it's shipped — not sampled, all of them.</h1>
+      <p class="lead">100% pre-dispatch leak and load testing is not an add-on service. It's the last step of manufacturing every cylinder, power pack and jack that leaves our facility.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="quality-layout">
+        <ul class="quality-points reveal">
+          <li>
+            <span class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-gauge"/></svg></span>
+            <div>
+              <h3>Pressure &amp; Leak Testing</h3>
+              <p>Every cylinder and power pack is held at 1.5&times; its rated working pressure for a minimum 5-minute hold, with zero leakage tolerance at all seal points.</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-blueprint"/></svg></span>
+            <div>
+              <h3>100% Load Testing</h3>
+              <p>Jacks and lifting rams are tested to their full rated tonnage before dispatch — not a sample batch, every single unit.</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-shield"/></svg></span>
+            <div>
+              <h3>Material Traceability</h3>
+              <p>Rod and barrel stock is sourced against mill certificates, with alloy and stainless steel selected to the corrosion and load profile of the application.</p>
+            </div>
+          </li>
+          <li>
+            <span class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg></span>
+            <div>
+              <h3>Dimensional Inspection</h3>
+              <p>Bore, rod finish and stroke length are measured against drawing tolerance before assembly — surface finish held to Ra &le; 0.4 &mu;m on running surfaces.</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="quality-protocol reveal" style="--rd:.15s">
+          <div class="quality-protocol__head">
+            <strong>Pre-Dispatch Test Log</strong>
+            <span>FORM QA-01</span>
+          </div>
+          <dl>
+            <% qualityChecks.forEach(function(q) { %>
+            <div class="spec-sheet__row">
+              <dt><%= q.label %></dt>
+              <dd><%= q.value %></dd>
+            </div>
+            <% }); %>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--light section--tight">
+    <div class="wrap" style="text-align:center;">
+      <p class="eyebrow" style="justify-content:center;">Standards Reference</p>
+      <h2 style="max-width:680px; margin:0 auto 16px;">Designed around ISO 4413 and ISO 6020/6022 fluid power principles.</h2>
+      <p style="max-width:64ch; margin:0 auto; color:var(--steel-light);">
+        Our cylinder and power pack designs follow the general rules and safety
+        requirements set out in ISO 4413 (hydraulic fluid power systems) and the
+        mounting dimension standards in ISO 6020/6022, adapted to each customer's
+        specific bore, stroke and pressure requirement.
+      </p>
+    </div>
+  </section>
+
+  <%- include('partials/faq') %>
+
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

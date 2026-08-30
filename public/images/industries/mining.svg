@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" role="img" aria-labelledby="mntitle">
+  <title id="mntitle">Open-pit mine with a haul truck, representing heavy-duty mining hydraulics</title>
+  <defs>
+    <linearGradient id="mnSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#17233B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="280" fill="url(#mnSky)"/>
+  <circle cx="60" cy="54" r="24" fill="#F97316" opacity="0.18"/>
+
+  <!-- open-pit terraces -->
+  <path d="M0 200 L90 200 L120 168 L400 168 V280 H0 Z" fill="#334155"/>
+  <path d="M0 226 L150 226 L176 200 L400 200 V280 H0 Z" fill="#1E293B"/>
+  <line x1="0" y1="200" x2="120" y2="168" stroke="#F97316" stroke-width="1.5" opacity="0.5"/>
+  <line x1="0" y1="226" x2="176" y2="200" stroke="#F97316" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- distant mountains -->
+  <path d="M180 168 L220 120 L250 150 L290 100 L330 168 Z" fill="#1E293B" opacity="0.8"/>
+
+  <!-- haul truck body -->
+  <rect x="230" y="196" width="110" height="34" rx="4" fill="#F1F5F9"/>
+  <rect x="238" y="176" width="40" height="24" rx="3" fill="#0F172A" opacity="0.7"/>
+  <circle cx="252" cy="238" r="16" fill="#0F172A" stroke="#94A3B8" stroke-width="3.5"/>
+  <circle cx="316" cy="238" r="16" fill="#0F172A" stroke="#94A3B8" stroke-width="3.5"/>
+
+  <!-- hydraulic tipping bed (raised, showing the ram) -->
+  <path d="M226 176 L336 176 L326 202 L236 202 Z" fill="#FDBA74" stroke="#F97316" stroke-width="2" stroke-linejoin="round" transform="rotate(-8 281 189)"/>
+  <rect x="270" y="178" width="10" height="34" rx="3" fill="#0F172A" stroke="#FFFFFF" stroke-width="1.75" transform="rotate(-8 275 195)"/>
+
+  <!-- small excavator/drill silhouette on upper terrace -->
+  <g opacity="0.9">
+    <rect x="46" y="150" width="20" height="14" rx="2" fill="#F97316"/>
+    <line x1="56" y1="150" x2="80" y2="118" stroke="#F97316" stroke-width="5" stroke-linecap="round"/>
+    <line x1="80" y1="118" x2="70" y2="100" stroke="#F97316" stroke-width="5" stroke-linecap="round"/>
+    <rect x="34" y="164" width="44" height="10" rx="3" fill="#0F172A" stroke="#94A3B8" stroke-width="2"/>
+  </g>
+</svg>

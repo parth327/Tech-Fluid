@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" role="img" aria-labelledby="hputitle">
+  <title id="hputitle">Hydraulic power pack with motor, pump and reservoir</title>
+  <defs>
+    <linearGradient id="hpuSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#17233B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="280" fill="url(#hpuSky)"/>
+  <line x1="0" y1="220" x2="400" y2="220" stroke="#334155" stroke-width="1" opacity="0.5"/>
+
+  <!-- reservoir tank -->
+  <rect x="60" y="110" width="130" height="100" rx="6" fill="#17233B" stroke="#F97316" stroke-width="3"/>
+  <rect x="72" y="122" width="106" height="14" rx="4" fill="#FFFFFF" opacity="0.06"/>
+  <!-- level sight glass -->
+  <rect x="172" y="140" width="10" height="56" rx="3" fill="#0F172A" stroke="#94A3B8" stroke-width="2"/>
+  <rect x="174" y="168" width="6" height="26" fill="#F97316" opacity="0.7"/>
+
+  <!-- motor -->
+  <circle cx="270" cy="128" r="42" fill="#17233B" stroke="#F97316" stroke-width="3"/>
+  <circle cx="270" cy="128" r="12" fill="#F97316"/>
+  <g stroke="#94A3B8" stroke-width="2.5">
+    <line x1="270" y1="92" x2="270" y2="102"/>
+    <line x1="270" y1="154" x2="270" y2="164"/>
+    <line x1="234" y1="128" x2="244" y2="128"/>
+    <line x1="296" y1="128" x2="306" y2="128"/>
+  </g>
+
+  <!-- pump coupling -->
+  <rect x="212" y="118" width="20" height="20" rx="3" fill="#334155" stroke="#94A3B8" stroke-width="2"/>
+
+  <!-- pipework linking tank to motor/pump -->
+  <path d="M190 150 H212" stroke="#F97316" stroke-width="5" stroke-linecap="round"/>
+  <path d="M270 170 V196 H120 V210" stroke="#94A3B8" stroke-width="3" fill="none" stroke-linecap="round"/>
+
+  <!-- skid base -->
+  <rect x="48" y="210" width="270" height="14" rx="3" fill="#F1F5F9"/>
+
+  <!-- control panel -->
+  <rect x="316" y="150" width="40" height="60" rx="3" fill="#1E293B" stroke="#94A3B8" stroke-width="2"/>
+  <circle cx="336" cy="164" r="6" fill="#F97316"/>
+  <rect x="324" y="180" width="24" height="7" rx="1.5" fill="#94A3B8"/>
+  <rect x="324" y="192" width="24" height="7" rx="1.5" fill="#94A3B8"/>
+
+  <text x="60" y="242" font-family="JetBrains Mono, monospace" font-size="12" fill="#94A3B8">2&#8211;250 LPM &#183; UP TO 5000 PSI</text>
+</svg>

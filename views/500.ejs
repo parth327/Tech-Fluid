@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<%- include('partials/header') %>
+<main>
+  <section class="error-page">
+    <div class="wrap" style="max-width:600px;">
+      <p class="error-page__code">ERROR 500</p>
+      <h1>Something slipped on our end.</h1>
+      <p>An unexpected error occurred while loading this page. Please try again, or contact us directly if the problem continues.</p>
+      <a href="/" class="btn btn--amber btn--lg" style="margin-top:12px;">
+        Back to Home
+        <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+      </a>
+    </div>
+  </section>
+</main>
+<%- include('partials/footer') %>
+</body>
+</html>

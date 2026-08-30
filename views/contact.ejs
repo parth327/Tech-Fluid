@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<%- include('partials/header') %>
+
+<main id="main">
+
+  <section class="about-hero" style="padding-bottom:0;">
+    <div class="wrap about-hero__inner">
+      <%- include('partials/breadcrumb') %>
+      <p class="eyebrow eyebrow--light">Request a Quote</p>
+      <h1>Tell us the spec. We'll confirm feasibility and lead time.</h1>
+      <p class="lead">Fill in as much detail as you have — bore, stroke, working pressure or tonnage — and our engineering team will follow up within one business day.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="contact-layout">
+
+        <div class="reveal">
+          <h2 style="font-size:1.4rem;">Contact Details</h2>
+          <div class="contact-info__list">
+            <div class="contact-info__item">
+              <span class="icon-wrap"><svg class="icon icon--sm" aria-hidden="true"><use href="#icon-pin"/></svg></span>
+              <div>
+                <h3>Manufacturing Facility</h3>
+                <p><%= company.address %></p>
+              </div>
+            </div>
+            <div class="contact-info__item">
+              <span class="icon-wrap"><svg class="icon icon--sm" aria-hidden="true"><use href="#icon-phone"/></svg></span>
+              <div>
+                <h3>Phone</h3>
+                <a href="tel:<%= company.phone.replace(/\s+/g,'') %>"><%= company.phone %></a>
+              </div>
+            </div>
+            <div class="contact-info__item">
+              <span class="icon-wrap"><svg class="icon icon--sm" aria-hidden="true"><use href="#icon-mail"/></svg></span>
+              <div>
+                <h3>Email</h3>
+                <a href="mailto:<%= company.email %>"><%= company.email %></a>
+              </div>
+            </div>
+            <div class="contact-info__item">
+              <span class="icon-wrap"><svg class="icon icon--sm" aria-hidden="true"><use href="#icon-gauge"/></svg></span>
+              <div>
+                <h3>Response Time</h3>
+                <p>Within one business day, Mon–Sat</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="rfq-card reveal" style="--rd:.1s">
+          <h2>Request for Quote</h2>
+          <p style="color:var(--steel-light); font-size:0.92rem; margin-bottom:24px;">
+            Fields marked <span class="req">*</span> are required — everything else helps us quote faster.
+          </p>
+
+          <div class="form-status" id="rfq-status" role="status" aria-live="polite"></div>
+
+          <form id="rfq-form" novalidate>
+            <div class="field field--honeypot" aria-hidden="true">
+              <label for="website">Leave this field empty</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="name">Full Name <span class="req">*</span></label>
+                <input type="text" id="name" name="name" required autocomplete="name">
+                <p class="field-error">Enter your full name.</p>
+              </div>
+              <div class="field">
+                <label for="company">Company Name</label>
+                <input type="text" id="company" name="company" autocomplete="organization">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="email">Email <span class="req">*</span></label>
+                <input type="email" id="email" name="email" required autocomplete="email">
+                <p class="field-error">Enter a valid email address.</p>
+              </div>
+              <div class="field">
+                <label for="phone">Phone <span class="req">*</span></label>
+                <input type="tel" id="phone" name="phone" required autocomplete="tel">
+                <p class="field-error">Enter a valid phone number.</p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="productCategory">Product Category <span class="req">*</span></label>
+              <select id="productCategory" name="productCategory" required>
+                <option value="">Select a category</option>
+                <% products.forEach(function(p) { %>
+                  <option value="<%= p.slug %>" <%= p.slug === activeSlug ? 'selected' : '' %>><%= p.tabLabel %></option>
+                <% }); %>
+                <option value="other">Other / Not Sure</option>
+              </select>
+              <p class="field-error">Select a product category.</p>
+            </div>
+
+            <div class="form-row form-row--3">
+              <div class="field">
+                <label for="bore">Bore</label>
+                <input type="text" id="bore" name="bore" placeholder="e.g. 100 mm">
+              </div>
+              <div class="field">
+                <label for="stroke">Stroke</label>
+                <input type="text" id="stroke" name="stroke" placeholder="e.g. 450 mm">
+              </div>
+              <div class="field">
+                <label for="pressure">Pressure</label>
+                <input type="text" id="pressure" name="pressure" placeholder="e.g. 3000 PSI">
+              </div>
+              <div class="field">
+                <label for="tonnage">Tonnage</label>
+                <input type="text" id="tonnage" name="tonnage" placeholder="e.g. 50 T">
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Tell us about your application, duty cycle, or timeline…"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn--amber btn--lg btn--block">Submit RFQ</button>
+            <p class="form-note">By submitting, you agree to be contacted by our engineering team about this request.</p>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

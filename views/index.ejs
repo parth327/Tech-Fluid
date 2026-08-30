@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<%- include('partials/header') %>
+
+<main id="main">
+
+  <section class="hero">
+    <div class="wrap hero__inner">
+      <div class="hero__content">
+        <p class="eyebrow eyebrow--light">Fluid Power Engineering &middot; Since 2009</p>
+        <h1>Engineered for Extreme Pressure: Precision Hydraulic Cylinders &amp; Power Packs</h1>
+        <p class="lead">Delivering custom-engineered fluid power solutions across India and global markets since 2009.</p>
+        <div class="hero__ctas">
+          <a href="/products" class="btn btn--amber btn--lg">
+            Explore Products
+            <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+          </a>
+          <a href="/contact" class="btn btn--outline btn--lg">Get Instant Quote</a>
+        </div>
+        <ul class="trust-badges">
+          <% trustBadges.forEach(function(badge) { %>
+            <li><svg class="icon icon--sm" aria-hidden="true"><use href="#icon-check"/></svg><%= badge %></li>
+          <% }); %>
+        </ul>
+      </div>
+      <div class="hero__diagram">
+        <%- include('partials/hero-diagram') %>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ stats band ============ -->
+  <section class="stats-band" aria-label="Company highlights">
+    <div class="wrap stats-band__inner">
+      <% stats.forEach(function(s, i) { %>
+      <div class="stats-band__item reveal" style="--rd:<%= i * 0.08 %>s">
+        <span class="stats-band__value"><%= s.value %></span>
+        <span class="stats-band__label"><%= s.label %></span>
+      </div>
+      <% }); %>
+    </div>
+  </section>
+
+  <!-- ============ product preview ============ -->
+  <section class="section section--navy" aria-labelledby="products-heading">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow eyebrow--light">What We Build</p>
+        <h2 id="products-heading">Three product lines. One testing standard.</h2>
+        <p>Every cylinder, power pack and jack is engineered to spec and pressure-tested before it leaves Ahmedabad.</p>
+      </div>
+      <div class="product-preview-grid">
+        <% products.forEach(function(p, i) { %>
+        <div class="product-preview-card reveal" style="--rd:<%= i * 0.1 %>s">
+          <div class="product-preview-card__image">
+            <img src="<%= p.image %>" alt="<%= p.name %>" loading="lazy" width="400" height="280">
+          </div>
+          <div class="product-preview-card__body">
+            <div class="product-card__icon">
+              <svg class="icon icon--lg" aria-hidden="true"><use href="#icon-<%= p.icon %>"/></svg>
+            </div>
+            <h3><%= p.name %></h3>
+            <p><%= p.tagline %></p>
+            <a href="/products?category=<%= p.slug %>" class="product-preview-card__link">
+              View specifications
+              <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+            </a>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ why choose us ============ -->
+  <section class="section" aria-labelledby="why-heading">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Why Tech Fluid Industries</p>
+        <h2 id="why-heading">Built for duty cycles that don't forgive shortcuts.</h2>
+      </div>
+      <div class="feature-grid">
+        <% whyChooseUs.forEach(function(f, i) { %>
+        <div class="feature-card reveal" style="--rd:<%= i * 0.08 %>s">
+          <div class="feature-card__icon">
+            <svg class="icon icon--lg" aria-hidden="true"><use href="#icon-<%= f.icon %>"/></svg>
+          </div>
+          <h3><%= f.title %></h3>
+          <p><%= f.description %></p>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ process / how we work ============ -->
+  <section class="section section--light" aria-labelledby="process-heading">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">How We Work</p>
+        <h2 id="process-heading">From enquiry to dispatch, five checkpoints — no shortcuts.</h2>
+      </div>
+      <ol class="process-rail">
+        <% processSteps.forEach(function(step, i) { %>
+        <li class="process-rail__item reveal" style="--rd:<%= i * 0.09 %>s">
+          <div class="process-rail__num"><%= String(i + 1).padStart(2, '0') %></div>
+          <div class="process-rail__icon">
+            <svg class="icon" aria-hidden="true"><use href="#icon-<%= step.icon %>"/></svg>
+          </div>
+          <h3><%= step.title %></h3>
+          <p><%= step.description %></p>
+        </li>
+        <% }); %>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ industries served ============ -->
+  <section class="section" aria-labelledby="industries-heading">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">Industries Served</p>
+        <h2 id="industries-heading">Wherever fluid has to move a load.</h2>
+      </div>
+      <div class="industry-grid">
+        <% industries.forEach(function(ind, i) { %>
+        <div class="industry-card reveal" style="--rd:<%= i * 0.06 %>s">
+          <div class="industry-card__image">
+            <img src="<%= ind.image %>" alt="<%= ind.name %>" loading="lazy" width="400" height="280">
+          </div>
+          <div class="industry-card__body">
+            <h3><%= ind.name %></h3>
+            <p><%= ind.description %></p>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+      <div class="reveal" style="margin-top:36px;">
+        <a href="/applications" class="btn btn--ghost">
+          See applications in detail
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ quality strip ============ -->
+  <section class="section section--navy section--tight" aria-labelledby="quality-heading">
+    <div class="wrap">
+      <div class="quality-layout">
+        <div class="reveal">
+          <p class="eyebrow eyebrow--light">Quality Assurance</p>
+          <h2 id="quality-heading">Nothing ships until it's proven at 1.5&times; rated pressure.</h2>
+          <p style="color:var(--muted-on-dark); font-size:1.02rem; margin-top:16px;">
+            Every unit — cylinder, power pack or jack — is leak-tested and load-tested
+            on our own test rigs before dispatch, with results logged against the order.
+          </p>
+          <a href="/quality" class="btn btn--outline" style="margin-top:24px;">
+            View our full QA protocol
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+          </a>
+        </div>
+        <div class="quality-protocol reveal" style="--rd:.15s">
+          <div class="quality-protocol__head">
+            <strong>Pre-Dispatch Test Log</strong>
+            <span>FORM QA-01</span>
+          </div>
+          <dl>
+            <% qualityChecks.slice(0,4).forEach(function(q) { %>
+            <div class="spec-sheet__row">
+              <dt><%= q.label %></dt>
+              <dd><%= q.value %></dd>
+            </div>
+            <% }); %>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%- include('partials/faq', { faqSectionLight: true }) %>
+
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

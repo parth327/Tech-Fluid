@@ -1,0 +1,34 @@
+<div class="admin-detail">
+  <div class="admin-detail__grid">
+    <div>
+      <h4>Contact</h4>
+      <p><a href="mailto:<%= lead.email %>"><%= lead.email %></a></p>
+      <p><a href="tel:<%= lead.phone %>"><%= lead.phone %></a></p>
+      <% if (lead.company) { %><p><%= lead.company %></p><% } %>
+    </div>
+    <div>
+      <h4>Requested Spec</h4>
+      <p class="admin-detail__spec">
+        <% if (lead.bore) { %>Bore: <%= lead.bore %><br><% } %>
+        <% if (lead.stroke) { %>Stroke: <%= lead.stroke %><br><% } %>
+        <% if (lead.pressure) { %>Pressure: <%= lead.pressure %><br><% } %>
+        <% if (lead.tonnage) { %>Tonnage: <%= lead.tonnage %><% } %>
+        <% if (!lead.bore && !lead.stroke && !lead.pressure && !lead.tonnage) { %>&mdash;<% } %>
+      </p>
+    </div>
+    <div class="admin-detail__message">
+      <h4>Message</h4>
+      <p><%= lead.message || '—' %></p>
+    </div>
+  </div>
+
+  <div class="admin-detail__notes">
+    <label for="notes-<%= lead.id %>">Internal Notes <span style="color:var(--steel-light); font-weight:400;">(only visible here, never shown to the customer)</span></label>
+    <textarea id="notes-<%= lead.id %>" class="js-notes-field" data-lead-id="<%= lead.id %>" placeholder="e.g. Called 14 Sep, waiting on drawing approval…"><%= lead.notes || '' %></textarea>
+    <div class="admin-detail__notes-actions">
+      <button type="button" class="btn btn--amber btn--sm js-save-notes" data-lead-id="<%= lead.id %>">Save Notes</button>
+      <span class="admin-detail__updated">Last updated <%= new Date(lead.updated_at || lead.created_at).toLocaleString('en-IN', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) %></span>
+      <button type="button" class="admin-delete-btn js-delete-lead" data-lead-id="<%= lead.id %>" style="margin-left:auto;">Delete Lead</button>
+    </div>
+  </div>
+</div>

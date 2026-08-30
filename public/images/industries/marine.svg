@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 280" role="img" aria-labelledby="mrtitle">
+  <title id="mrtitle">Ship at sea, representing marine-grade hydraulic steering and winch cylinders</title>
+  <defs>
+    <linearGradient id="mrSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#17233B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="mrSea" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0B3B5C"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="280" fill="url(#mrSky)"/>
+  <circle cx="330" cy="60" r="26" fill="#FDBA74" opacity="0.5"/>
+  <circle cx="330" cy="60" r="14" fill="#F97316" opacity="0.6"/>
+
+  <!-- sea -->
+  <rect x="0" y="190" width="400" height="90" fill="url(#mrSea)"/>
+  <path d="M0 190 Q40 182 80 190 T160 190 T240 190 T320 190 T400 190" stroke="#F97316" stroke-width="1.5" opacity="0.5" fill="none"/>
+
+  <!-- hull -->
+  <path d="M90 190 L310 190 L286 226 L114 226 Z" fill="#F1F5F9"/>
+  <rect x="100" y="180" width="200" height="12" fill="#334155"/>
+
+  <!-- deckhouse -->
+  <rect x="180" y="140" width="60" height="40" fill="#0F172A" stroke="#94A3B8" stroke-width="2"/>
+  <rect x="190" y="150" width="14" height="12" fill="#F97316" opacity="0.8"/>
+  <rect x="212" y="150" width="14" height="12" fill="#F97316" opacity="0.8"/>
+
+  <!-- mast + winch line -->
+  <line x1="210" y1="140" x2="210" y2="96" stroke="#94A3B8" stroke-width="4"/>
+  <circle cx="210" cy="94" r="6" fill="#F97316"/>
+
+  <!-- crane arm with hydraulic cylinder (winch/steering gear callout) -->
+  <path d="M240 150 L292 118" stroke="#94A3B8" stroke-width="6" stroke-linecap="round"/>
+  <rect x="248" y="132" width="34" height="10" rx="3" fill="#0F172A" stroke="#F97316" stroke-width="2" transform="rotate(-30 248 132)"/>
+  <circle cx="292" cy="118" r="4" fill="#F97316"/>
+  <line x1="292" y1="118" x2="292" y2="150" stroke="#CBD5E1" stroke-width="1.5" opacity="0.7"/>
+
+  <!-- waves in front -->
+  <path d="M0 236 Q20 228 40 236 T80 236 T120 236 T160 236 T200 236 T240 236 T280 236 T320 236 T360 236 T400 236" stroke="#1D4E68" stroke-width="4" fill="none" opacity="0.7"/>
+  <path d="M0 254 Q20 246 40 254 T80 254 T120 254 T160 254 T200 254 T240 254 T280 254 T320 254 T360 254 T400 254" stroke="#123249" stroke-width="4" fill="none" opacity="0.6"/>
+</svg>

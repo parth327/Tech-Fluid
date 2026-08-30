@@ -1,0 +1,22 @@
+<section class="section<%= typeof faqSectionLight !== 'undefined' && faqSectionLight ? ' section--light' : '' %>" aria-labelledby="faq-heading">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="eyebrow">Engineering FAQ</p>
+      <h2 id="faq-heading">Straight answers to the specs that matter.</h2>
+      <p>Genuine questions our engineering team gets asked most — on seals, tolerances, testing and standards.</p>
+    </div>
+    <div class="faq-list reveal" style="--rd:.1s">
+      <% faqs.forEach(function(faq, i) { %>
+      <div class="faq-item">
+        <button type="button" class="faq-item__q" aria-expanded="false" aria-controls="faq-a-<%= i %>">
+          <span><%= faq.question %></span>
+          <svg class="icon faq-item__chev" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+        </button>
+        <div class="faq-item__a" id="faq-a-<%= i %>" hidden>
+          <p><%= faq.answer %></p>
+        </div>
+      </div>
+      <% }); %>
+    </div>
+  </div>
+</section>

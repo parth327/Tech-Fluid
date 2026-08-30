@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<%- include('partials/header') %>
+
+<main id="main">
+
+  <section class="about-hero">
+    <div class="wrap about-hero__inner">
+      <%- include('partials/breadcrumb') %>
+      <p class="eyebrow eyebrow--light">About Tech Fluid Industries</p>
+      <h1>Fluid power engineering, built on the shop floor in Ahmedabad since 2009.</h1>
+      <p class="lead">
+        We design and manufacture hydraulic cylinders, power packs and lifting
+        equipment for customers who can't afford a seal failure mid-shift —
+        earthmoving fleets, press lines, and material handling operations across India.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="facility-banner reveal">
+        <svg class="facility-banner__illus" viewBox="0 0 900 380" role="img" aria-label="Tech Fluid Industries manufacturing floor in Ahmedabad"><use href="#illus-facility"/></svg>
+      </div>
+      <div class="timeline reveal">
+        <div class="timeline__point">
+          <span class="timeline__year">2009</span>
+          <p>Tech Fluid Industries is founded in Ahmedabad, Gujarat, to manufacture precision hydraulic cylinders.</p>
+        </div>
+        <div class="timeline__point">
+          <span class="timeline__year">Today</span>
+          <p>15+ years of engineering experience, three product lines, and pan-India dispatch from Kathwada GIDC.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--light">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">How We Work</p>
+        <h2>Every order starts as a specification, not a catalog number.</h2>
+        <p>We don't stock generic cylinders and hope they fit. We ask for your bore, stroke, working pressure and mounting requirement first, then build to match.</p>
+      </div>
+      <ul class="capability-list reveal" style="--rd:.1s">
+        <li>
+          <span class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-blueprint"/></svg></span>
+          <div><h3>Custom design &amp; drafting</h3><p style="color:var(--steel-light); font-size:0.92rem; margin:0;">Bore, stroke, port and mounting configured to your machine, not the other way around.</p></div>
+        </li>
+        <li>
+          <span class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-gauge"/></svg></span>
+          <div><h3>In-house pressure testing</h3><p style="color:var(--steel-light); font-size:0.92rem; margin:0;">Every unit tested on our own rigs at 1.5&times; rated pressure before dispatch.</p></div>
+        </li>
+        <li>
+          <span class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-shield"/></svg></span>
+          <div><h3>Material selection</h3><p style="color:var(--steel-light); font-size:0.92rem; margin:0;">Alloy and stainless steel matched to the corrosion and load profile of the job.</p></div>
+        </li>
+        <li>
+          <span class="icon-wrap"><svg class="icon" aria-hidden="true"><use href="#icon-truck"/></svg></span>
+          <div><h3>Pan-India dispatch</h3><p style="color:var(--steel-light); font-size:0.92rem; margin:0;">Logistics and technical support that reaches project sites, not just city hubs.</p></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--navy section--tight">
+    <div class="wrap" style="max-width:760px; text-align:center;">
+      <p class="eyebrow eyebrow--light" style="justify-content:center;">Our Approach</p>
+      <h2>Precision engineering, tested before it's trusted.</h2>
+      <p style="color:var(--muted-on-dark); font-size:1.05rem; margin-top:16px;">
+        A hydraulic failure on an excavator boom or a press line doesn't just cost
+        money — it stops a job site. That's the standard every cylinder, power pack
+        and jack we build is measured against, from first drawing to final test.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

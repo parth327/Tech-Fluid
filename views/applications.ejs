@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('partials/head') %>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<%- include('partials/header') %>
+
+<main id="main">
+
+  <section class="about-hero">
+    <div class="wrap about-hero__inner">
+      <%- include('partials/breadcrumb') %>
+      <p class="eyebrow eyebrow--light">Applications</p>
+      <h1>Wherever fluid power has to move, lift or press a load.</h1>
+      <p class="lead">From open-pit mines to marine decks, our cylinders and power packs are specified around the duty cycle of the industry they serve.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="industry-grid">
+        <% industries.forEach(function(ind, i) { %>
+        <div class="industry-card reveal" style="--rd:<%= i * 0.07 %>s">
+          <div class="industry-card__image">
+            <img src="<%= ind.image %>" alt="<%= ind.name %>" loading="lazy" width="400" height="280">
+          </div>
+          <div class="industry-card__body">
+            <div class="industry-card__icon">
+              <svg class="icon icon--lg" aria-hidden="true"><use href="#icon-<%= ind.icon %>"/></svg>
+            </div>
+            <h3 style="font-size:1.15rem;"><%= ind.name %></h3>
+            <p style="font-size:0.95rem;"><%= ind.description %></p>
+          </div>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy section--tight">
+    <div class="wrap" style="text-align:center;">
+      <p class="eyebrow eyebrow--light" style="justify-content:center;">Not Listed?</p>
+      <h2 style="max-width:620px; margin:0 auto 16px;">If it runs on hydraulic pressure, we've probably already built for it.</h2>
+      <p style="max-width:56ch; margin:0 auto 28px; color:var(--muted-on-dark);">
+        Tell us about your application and duty cycle — our engineers will confirm
+        the right bore, seal and mounting for the job.
+      </p>
+      <a href="/contact" class="btn btn--amber btn--lg">
+        Discuss Your Application
+        <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"/></svg>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>
