@@ -129,7 +129,7 @@
       </div>
       <div class="industry-grid">
         <% industries.forEach(function(ind, i) { %>
-        <div class="industry-card reveal" style="--rd:<%= i * 0.06 %>s">
+        <a href="/applications#<%= ind.slug %>" class="industry-card reveal" style="--rd:<%= i * 0.06 %>s">
           <div class="industry-card__image">
             <img src="<%= ind.image %>" alt="<%= ind.name %>" loading="lazy" width="400" height="280">
           </div>
@@ -137,7 +137,7 @@
             <h3><%= ind.name %></h3>
             <p><%= ind.description %></p>
           </div>
-        </div>
+        </a>
         <% }); %>
       </div>
       <div class="reveal" style="margin-top:36px;">

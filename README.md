@@ -108,10 +108,26 @@ via `psql`:
 
 ```sql
 SELECT id, name, email, phone, company, product_category,
-       bore, stroke, pressure, tonnage, message, status, created_at
+       bore, stroke, pressure, tonnage, quantity, timeline,
+       application_details, budget_range, preferred_contact, best_time_to_call,
+       message, attachment_original_name, status, created_at
 FROM rfq_requests
 ORDER BY created_at DESC;
 ```
+
+### Drawing/spec attachments
+
+The RFQ form accepts an optional PDF/PNG/JPG attachment (max 5 MB), saved to
+`uploads/rfq/` under a randomly generated filename (never the customer's
+original filename, to avoid path-traversal/overwrite issues) and only
+downloadable by a logged-in admin at `/admin/api/rfq/:id/attachment` — it is
+never served from `/public` or exposed to unauthenticated visitors.
+
+`uploads/` is gitignored and lives on local disk. **Most hosting platforms
+(Render, Railway, etc.) have an ephemeral filesystem** — files written there
+are lost on redeploy/restart unless you attach a persistent volume. For
+production, either mount a persistent disk at `uploads/` or swap the
+`multer.diskStorage` in `routes/rfq.js` for an S3-compatible storage backend.
 
 ## Editing content
 

@@ -5,6 +5,7 @@
       <p><a href="mailto:<%= lead.email %>"><%= lead.email %></a></p>
       <p><a href="tel:<%= lead.phone %>"><%= lead.phone %></a></p>
       <% if (lead.company) { %><p><%= lead.company %></p><% } %>
+      <% if (lead.preferred_contact) { %><p style="color:var(--steel-light); font-size:0.85rem;">Prefers: <%= lead.preferred_contact %><% if (lead.best_time_to_call) { %> &middot; <%= lead.best_time_to_call %><% } %></p><% } %>
     </div>
     <div>
       <h4>Requested Spec</h4>
@@ -12,13 +13,33 @@
         <% if (lead.bore) { %>Bore: <%= lead.bore %><br><% } %>
         <% if (lead.stroke) { %>Stroke: <%= lead.stroke %><br><% } %>
         <% if (lead.pressure) { %>Pressure: <%= lead.pressure %><br><% } %>
-        <% if (lead.tonnage) { %>Tonnage: <%= lead.tonnage %><% } %>
-        <% if (!lead.bore && !lead.stroke && !lead.pressure && !lead.tonnage) { %>&mdash;<% } %>
+        <% if (lead.tonnage) { %>Tonnage: <%= lead.tonnage %><br><% } %>
+        <% if (lead.quantity) { %>Qty: <%= lead.quantity %><% } %>
+        <% if (!lead.bore && !lead.stroke && !lead.pressure && !lead.tonnage && !lead.quantity) { %>&mdash;<% } %>
+      </p>
+    </div>
+    <div>
+      <h4>Timeline &amp; Budget</h4>
+      <p class="admin-detail__spec">
+        <% if (lead.timeline) { %>Timeline: <%= lead.timeline %><br><% } %>
+        <% if (lead.budget_range) { %>Budget: <%= lead.budget_range %><% } %>
+        <% if (!lead.timeline && !lead.budget_range) { %>&mdash;<% } %>
       </p>
     </div>
     <div class="admin-detail__message">
       <h4>Message</h4>
       <p><%= lead.message || '—' %></p>
+      <% if (lead.application_details) { %>
+        <h4 style="margin-top:12px;">Application / Site Details</h4>
+        <p><%= lead.application_details %></p>
+      <% } %>
+      <% if (lead.attachment_filename) { %>
+        <h4 style="margin-top:12px;">Attachment</h4>
+        <a href="/admin/api/rfq/<%= lead.id %>/attachment" class="admin-call-link" style="color:var(--amber-dark); background:var(--amber-wash); border-color:var(--amber-light);">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-download"/></svg>
+          <%= lead.attachment_original_name || 'Download file' %>
+        </a>
+      <% } %>
     </div>
   </div>
 

@@ -22,7 +22,7 @@
     <div class="wrap">
       <div class="industry-grid">
         <% industries.forEach(function(ind, i) { %>
-        <div class="industry-card reveal" style="--rd:<%= i * 0.07 %>s">
+        <div class="industry-card reveal" id="<%= ind.slug %>" style="--rd:<%= i * 0.07 %>s; scroll-margin-top:100px;">
           <div class="industry-card__image">
             <img src="<%= ind.image %>" alt="<%= ind.name %>" loading="lazy" width="400" height="280">
           </div>

@@ -106,14 +106,14 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting…';
 
+      // multipart/form-data (not JSON) so the optional drawing/spec
+      // attachment rides along in the same request. Let the browser set
+      // its own Content-Type with the multipart boundary.
       var formData = new FormData(rfqForm);
-      var payload = {};
-      formData.forEach(function (value, key) { payload[key] = value; });
 
       fetch('/api/rfq', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: formData,
       })
         .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
         .then(function (result) {

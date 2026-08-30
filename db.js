@@ -64,6 +64,16 @@ const SCHEMA_SQL = `
   CREATE INDEX IF NOT EXISTS idx_rfq_requests_status ON rfq_requests (status);
   ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS notes TEXT;
   ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS quantity TEXT;
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS timeline TEXT;
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS application_details TEXT;
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS budget_range TEXT;
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS preferred_contact TEXT;
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS best_time_to_call TEXT;
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS attachment_filename TEXT;
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS attachment_original_name TEXT;
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS attachment_mime TEXT;
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS attachment_size INTEGER;
 `;
 
 // Cached so concurrent requests during a cold start don't all race to
@@ -159,16 +169,25 @@ async function checkHealth() {
 async function insertRfq({
   name, email, phone, company, productCategory,
   bore, stroke, pressure, tonnage, message,
+  quantity, timeline, applicationDetails, budgetRange,
+  preferredContact, bestTimeToCall,
+  attachmentFilename, attachmentOriginalName, attachmentMime, attachmentSize,
 }) {
   const sql = `
     INSERT INTO rfq_requests
       (name, email, phone, company, product_category,
-       bore, stroke, pressure, tonnage, message)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+       bore, stroke, pressure, tonnage, message,
+       quantity, timeline, application_details, budget_range,
+       preferred_contact, best_time_to_call,
+       attachment_filename, attachment_original_name, attachment_mime, attachment_size)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
     RETURNING id, created_at
   `;
   const values = [name, email, phone, company, productCategory,
-    bore, stroke, pressure, tonnage, message];
+    bore, stroke, pressure, tonnage, message,
+    quantity || null, timeline || null, applicationDetails || null, budgetRange || null,
+    preferredContact || null, bestTimeToCall || null,
+    attachmentFilename || null, attachmentOriginalName || null, attachmentMime || null, attachmentSize || null];
   return withRetry(async () => {
     const { rows } = await pool.query(sql, values);
     return rows[0];
@@ -322,6 +341,23 @@ async function deleteRfq(id) {
 }
 
 /**
+ * Attachment filenames for a set of lead ids that actually have one —
+ * fetched before a delete so the caller can clean up the files on disk
+ * (the DB row alone doesn't know where `uploads/rfq/` lives).
+ */
+async function getAttachmentFilenames(ids) {
+  const cleanIds = ids.map((id) => parseInt(id, 10)).filter(Number.isInteger);
+  if (cleanIds.length === 0) return [];
+  return withRetry(async () => {
+    const { rows } = await pool.query(
+      'SELECT attachment_filename FROM rfq_requests WHERE id = ANY($1::int[]) AND attachment_filename IS NOT NULL',
+      [cleanIds]
+    );
+    return rows.map((r) => r.attachment_filename);
+  });
+}
+
+/**
  * Counts per status, for the admin dashboard summary strip.
  */
 async function getRfqStatusCounts() {
@@ -386,6 +422,7 @@ module.exports = {
   bulkUpdateStatus,
   bulkDelete,
   deleteRfq,
+  getAttachmentFilenames,
   getRfqStatusCounts,
   getRfqCategoryCounts,
   getRfqDailyCounts,

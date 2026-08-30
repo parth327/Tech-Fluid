@@ -64,7 +64,7 @@
 
           <div class="form-status" id="rfq-status" role="status" aria-live="polite"></div>
 
-          <form id="rfq-form" novalidate>
+          <form id="rfq-form" novalidate enctype="multipart/form-data">
             <div class="field field--honeypot" aria-hidden="true">
               <label for="website">Leave this field empty</label>
               <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
@@ -126,9 +126,60 @@
               </div>
             </div>
 
+            <div class="form-row">
+              <div class="field">
+                <label for="quantity">Quantity</label>
+                <input type="text" id="quantity" name="quantity" placeholder="e.g. 25 units">
+              </div>
+              <div class="field">
+                <label for="timeline">Preferred Timeline</label>
+                <select id="timeline" name="timeline">
+                  <option value="">Select timeline</option>
+                  <option value="immediate">Immediate / Urgent</option>
+                  <option value="2-4-weeks">Within 2–4 weeks</option>
+                  <option value="1-3-months">Within 1–3 months</option>
+                  <option value="flexible">Flexible / Just exploring</option>
+                </select>
+                <p class="field-error">Select a valid timeline.</p>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="field">
+                <label for="budgetRange">Budget Range <span style="font-weight:400; color:var(--steel-light);">(optional)</span></label>
+                <input type="text" id="budgetRange" name="budgetRange" placeholder="e.g. ₹1–2 lakh">
+              </div>
+              <div class="field">
+                <label for="preferredContact">Preferred Contact Method</label>
+                <select id="preferredContact" name="preferredContact">
+                  <option value="">No preference</option>
+                  <option value="phone">Phone Call</option>
+                  <option value="email">Email</option>
+                  <option value="whatsapp">WhatsApp</option>
+                </select>
+                <p class="field-error">Select a valid contact method.</p>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="bestTimeToCall">Best Time to Reach You <span style="font-weight:400; color:var(--steel-light);">(optional)</span></label>
+              <input type="text" id="bestTimeToCall" name="bestTimeToCall" placeholder="e.g. Weekdays 10am–1pm">
+            </div>
+
+            <div class="field">
+              <label for="applicationDetails">Application / Site Details <span style="font-weight:400; color:var(--steel-light);">(optional)</span></label>
+              <textarea id="applicationDetails" name="applicationDetails" placeholder="What will this be installed on or used for?"></textarea>
+            </div>
+
             <div class="field">
               <label for="message">Message</label>
               <textarea id="message" name="message" placeholder="Tell us about your application, duty cycle, or timeline…"></textarea>
+            </div>
+
+            <div class="field">
+              <label for="attachment">Drawing / Spec Sheet <span style="font-weight:400; color:var(--steel-light);">(optional — PDF, PNG or JPG, max 5 MB)</span></label>
+              <input type="file" id="attachment" name="attachment" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg">
+              <p class="field-error">Attachment must be a PDF, PNG or JPG under 5 MB.</p>
             </div>
 
             <button type="submit" class="btn btn--amber btn--lg btn--block">Submit RFQ</button>

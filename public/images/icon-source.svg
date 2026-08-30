@@ -1,9 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <rect width="512" height="512" rx="96" fill="#0F172A"/>
+  <!-- precision ring -->
+  <circle cx="256" cy="256" r="218" fill="none" stroke="#F97316" stroke-width="20" opacity="0.35"/>
   <!-- cylinder barrel -->
-  <rect x="96" y="196" width="200" height="120" rx="16" fill="none" stroke="#F97316" stroke-width="26"/>
+  <rect x="102" y="179" width="205" height="154" rx="32" fill="none" stroke="#F97316" stroke-width="33"/>
   <!-- rod -->
-  <rect x="296" y="236" width="120" height="40" fill="#F97316"/>
-  <!-- rod end / clevis -->
-  <rect x="404" y="212" width="44" height="88" rx="10" fill="none" stroke="#F97316" stroke-width="22"/>
+  <line x1="307" y1="256" x2="384" y2="256" stroke="#F97316" stroke-width="41" stroke-linecap="round"/>
+  <!-- rod tip / directional force chevron -->
+  <path d="M384 205 L442 256 L384 307 Z" fill="#F97316"/>
+  <!-- bore accent -->
+  <circle cx="166" cy="256" r="20" fill="#F97316" opacity="0.9"/>
 </svg>

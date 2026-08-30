@@ -18,9 +18,15 @@
       <div class="admin-topbar__brand">
         Tech Fluid Industries <span class="tag">RFQ ADMIN</span>
       </div>
-      <form method="POST" action="/admin/logout">
-        <button type="submit" class="btn btn--outline btn--sm">Log Out</button>
-      </form>
+      <div class="admin-topbar__actions">
+        <a href="/" class="btn btn--outline btn--sm">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#icon-arrow-left"/></svg>
+          Back to Website
+        </a>
+        <form method="POST" action="/admin/logout">
+          <button type="submit" class="btn btn--outline btn--sm">Log Out</button>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -65,23 +71,28 @@
       </div>
 
       <div class="admin-counts">
-        <a href="/admin<%= search ? `?q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card <%= !activeStatus ? 'is-active' : '' %>">
+        <a href="/admin<%= search ? `?q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card admin-count-card--all <%= !activeStatus ? 'is-active' : '' %>">
+          <span class="admin-count-card__icon"><svg class="icon icon--sm" aria-hidden="true"><use href="#icon-quote"/></svg></span>
           <span class="admin-count-card__value"><%= counts.total %></span>
           <span class="admin-count-card__label">All</span>
         </a>
-        <a href="/admin?status=new<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card <%= activeStatus === 'new' ? 'is-active' : '' %>">
+        <a href="/admin?status=new<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card admin-count-card--new <%= activeStatus === 'new' ? 'is-active' : '' %>">
+          <span class="admin-count-card__icon"><svg class="icon icon--sm" aria-hidden="true"><use href="#icon-gauge"/></svg></span>
           <span class="admin-count-card__value"><%= counts.new %></span>
           <span class="admin-count-card__label">New</span>
         </a>
-        <a href="/admin?status=contacted<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card <%= activeStatus === 'contacted' ? 'is-active' : '' %>">
+        <a href="/admin?status=contacted<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card admin-count-card--contacted <%= activeStatus === 'contacted' ? 'is-active' : '' %>">
+          <span class="admin-count-card__icon"><svg class="icon icon--sm" aria-hidden="true"><use href="#icon-phone"/></svg></span>
           <span class="admin-count-card__value"><%= counts.contacted %></span>
           <span class="admin-count-card__label">Contacted</span>
         </a>
-        <a href="/admin?status=quoted<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card <%= activeStatus === 'quoted' ? 'is-active' : '' %>">
+        <a href="/admin?status=quoted<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card admin-count-card--quoted <%= activeStatus === 'quoted' ? 'is-active' : '' %>">
+          <span class="admin-count-card__icon"><svg class="icon icon--sm" aria-hidden="true"><use href="#icon-mail"/></svg></span>
           <span class="admin-count-card__value"><%= counts.quoted %></span>
           <span class="admin-count-card__label">Quoted</span>
         </a>
-        <a href="/admin?status=closed<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card <%= activeStatus === 'closed' ? 'is-active' : '' %>">
+        <a href="/admin?status=closed<%= search ? `&q=${encodeURIComponent(search)}` : '' %>" class="admin-count-card admin-count-card--closed <%= activeStatus === 'closed' ? 'is-active' : '' %>">
+          <span class="admin-count-card__icon"><svg class="icon icon--sm" aria-hidden="true"><use href="#icon-check"/></svg></span>
           <span class="admin-count-card__value"><%= counts.closed %></span>
           <span class="admin-count-card__label">Closed</span>
         </a>

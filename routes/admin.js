@@ -1,8 +1,12 @@
 const express = require('express');
 const crypto = require('crypto');
+const path = require('path');
+const fs = require('fs');
 const rateLimit = require('express-rate-limit');
 const router = express.Router();
 const db = require('../db');
+
+const UPLOAD_DIR = path.join(__dirname, '..', 'uploads', 'rfq');
 
 const COOKIE_NAME = 'tfi_admin';
 const SESSION_HOURS = 12;
@@ -182,7 +186,9 @@ router.get('/export.csv', requireAdmin, async (req, res, next) => {
 
     const columns = [
       'id', 'created_at', 'name', 'email', 'phone', 'company', 'product_category',
-      'bore', 'stroke', 'pressure', 'tonnage', 'message', 'status', 'notes',
+      'bore', 'stroke', 'pressure', 'tonnage', 'quantity', 'timeline',
+      'application_details', 'budget_range', 'preferred_contact', 'best_time_to_call',
+      'message', 'attachment_original_name', 'status', 'notes',
     ];
     const lines = [columns.join(',')];
     rows.forEach((row) => {
@@ -192,6 +198,42 @@ router.get('/export.csv', requireAdmin, async (req, res, next) => {
     res.setHeader('Content-Type', 'text/csv; charset=utf-8');
     res.setHeader('Content-Disposition', `attachment; filename="rfq-leads-${new Date().toISOString().slice(0, 10)}.csv"`);
     res.send(lines.join('\n'));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ---------- attachment download (staff-only; never served from /public) ----------
+
+router.get('/api/rfq/:id/attachment', requireAdmin, async (req, res, next) => {
+  try {
+    const id = parseInt(req.params.id, 10);
+    if (!Number.isInteger(id)) return res.status(400).render('404', { pageTitle: 'Not Found', metaDescription: '' });
+
+    const lead = await db.getRfqById(id);
+    if (!lead || !lead.attachment_filename) {
+      return res.status(404).render('404', {
+        pageTitle: 'Attachment Not Found | Admin',
+        metaDescription: 'This RFQ has no attachment.',
+      });
+    }
+
+    // attachment_filename is a server-generated random name (see routes/rfq.js),
+    // never derived from user input, so this is safe from path traversal.
+    const filePath = path.join(UPLOAD_DIR, lead.attachment_filename);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).render('404', {
+        pageTitle: 'Attachment Not Found | Admin',
+        metaDescription: 'This file is no longer available.',
+      });
+    }
+
+    res.setHeader('Content-Type', lead.attachment_mime || 'application/octet-stream');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="${(lead.attachment_original_name || 'attachment').replace(/[^\w.\-]/g, '_')}"`
+    );
+    res.sendFile(filePath);
   } catch (err) {
     next(err);
   }
@@ -223,7 +265,11 @@ router.post('/api/rfq/bulk/delete', requireAdminApi, async (req, res, next) => {
     if (!Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({ success: false, message: 'Invalid request.' });
     }
+    // Fetched before the DB delete, since once the rows are gone we'd have
+    // no way to know which attachment files on disk belonged to them.
+    const filenames = await db.getAttachmentFilenames(ids);
     const deleted = await db.bulkDelete(ids);
+    filenames.forEach((filename) => fs.unlink(path.join(UPLOAD_DIR, filename), () => {}));
     res.json({ success: true, deleted });
   } catch (err) {
     next(err);
@@ -266,8 +312,10 @@ router.delete('/api/rfq/:id', requireAdminApi, async (req, res, next) => {
     if (!Number.isInteger(id)) {
       return res.status(400).json({ success: false, message: 'Invalid request.' });
     }
+    const [filename] = await db.getAttachmentFilenames([id]);
     const deleted = await db.deleteRfq(id);
     if (!deleted) return res.status(404).json({ success: false, message: 'Lead not found.' });
+    if (filename) fs.unlink(path.join(UPLOAD_DIR, filename), () => {});
     res.json({ success: true });
   } catch (err) {
     next(err);

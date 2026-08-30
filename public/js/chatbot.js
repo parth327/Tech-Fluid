@@ -84,8 +84,37 @@
       { label: '💰 Get a Quote', action: startQuoteFlow },
       { label: '🏭 Industries We Serve', action: showIndustries },
       { label: '✅ Quality & Testing', action: showQuality },
+      { label: '🚚 Delivery & Lead Time', action: showDelivery },
+      { label: '📄 Download Brochure', action: showBrochure },
       { label: '💬 Talk to a Human', action: showHuman },
     ]);
+  }
+
+  function showDelivery() {
+    typingThenBot('Typical lead times:', 400);
+    setTimeout(function () {
+      addBotHtml(
+        'Standard cylinders / jacks: <strong>2–4 weeks</strong> from drawing approval.<br>' +
+        'Custom power packs (HPUs): <strong>3–6 weeks</strong>, depending on motor and reservoir size.<br>' +
+        'Urgent requirements: tell us in your RFQ and we’ll confirm the fastest feasible date.<br><br>' +
+        'Dispatch is pan-India, with our engineering team on call for install support.'
+      );
+      setQuickReplies([
+        { label: 'Get a Quote', action: startQuoteFlow },
+        { label: '⬅ Main Menu', action: mainMenu },
+      ]);
+    }, 700);
+  }
+
+  function showBrochure() {
+    typingThenBot('Here you go —', 350);
+    setTimeout(function () {
+      addBotHtml('<a href="/brochure.pdf" target="_blank" rel="noopener">📄 Open the Product Brochure (PDF)</a>');
+      setQuickReplies([
+        { label: 'Get a Quote', action: startQuoteFlow },
+        { label: '⬅ Main Menu', action: mainMenu },
+      ]);
+    }, 500);
   }
 
   function showProducts() {
@@ -187,8 +216,23 @@
   function pickCategory(slug, label) {
     addMessage(label, 'user');
     flow.data.productCategory = slug;
+    flow.step = 'timeline';
+    typingThenBot('How soon do you need this?', 450);
+    setTimeout(function () {
+      setQuickReplies([
+        { label: 'Immediate / Urgent', action: function () { pickTimeline('immediate', 'Immediate / Urgent'); } },
+        { label: 'Within 2–4 weeks', action: function () { pickTimeline('2-4-weeks', 'Within 2–4 weeks'); } },
+        { label: 'Within 1–3 months', action: function () { pickTimeline('1-3-months', 'Within 1–3 months'); } },
+        { label: 'Just exploring', action: function () { pickTimeline('flexible', 'Just exploring'); } },
+      ]);
+    }, 650);
+  }
+
+  function pickTimeline(value, label) {
+    addMessage(label, 'user');
+    flow.data.timeline = value;
     flow.step = 'message';
-    typingThenBot('Last thing — anything specific about your requirement? (bore, stroke, pressure, tonnage, timeline — or just say "no")', 500);
+    typingThenBot('Last thing — anything specific about your requirement? (bore, stroke, pressure, tonnage — or just say "no")', 500);
     setTimeout(function () { input.focus(); }, 600);
   }
 
@@ -199,6 +243,7 @@
       phone: flow.data.phone,
       email: 'not-provided-via-chat@techfluidindustries.com',
       productCategory: flow.data.productCategory,
+      timeline: flow.data.timeline || '',
       message: flow.data.message === 'no' ? '' : ('(via chat widget) ' + flow.data.message),
       website: '', // honeypot field, always empty from the chat flow
     };
