@@ -1,6 +1,4 @@
 const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
 const express = require('express');
 const multer = require('multer');
 const rateLimit = require('express-rate-limit');
@@ -28,25 +26,15 @@ const MAX_LENGTHS = {
 };
 
 // ---------- optional drawing/spec attachment ----------
-const UPLOAD_DIR = path.join(__dirname, '..', 'uploads', 'rfq');
-fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-
+// Stored as bytes in Postgres (attachment_data) rather than on local disk —
+// serverless hosts like Vercel run on a read-only/ephemeral filesystem, so
+// a saved file wouldn't reliably exist by the time it's downloaded later.
 const ALLOWED_MIME_TYPES = new Set([
   'application/pdf', 'image/png', 'image/jpeg',
 ]);
 
-const storage = multer.diskStorage({
-  destination: UPLOAD_DIR,
-  filename: (req, file, cb) => {
-    // Never trust the client's filename — generate our own and keep the
-    // original only as metadata (attachment_original_name in the DB).
-    const ext = { 'application/pdf': '.pdf', 'image/png': '.png', 'image/jpeg': '.jpg' }[file.mimetype] || '';
-    cb(null, crypto.randomBytes(20).toString('hex') + ext);
-  },
-});
-
 const upload = multer({
-  storage,
+  storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024, files: 1 },
   fileFilter: (req, file, cb) => {
     cb(null, ALLOWED_MIME_TYPES.has(file.mimetype));
@@ -105,23 +93,21 @@ function validate(body) {
 }
 
 router.post('/', rfqLimiter, handleUpload, async (req, res) => {
-  const cleanupUpload = () => {
-    if (req.file) fs.unlink(req.file.path, () => {});
-  };
-
   try {
     // Honeypot: a hidden field real visitors never fill in. Bots that
     // auto-fill every input trip this and get a fake-success response.
     if (req.body.website) {
-      cleanupUpload();
       return res.json({ success: true, message: 'Thank you — your request has been received.' });
     }
 
     const errors = validate(req.body);
     if (Object.keys(errors).length > 0) {
-      cleanupUpload();
       return res.status(400).json({ success: false, message: 'Please correct the highlighted fields.', errors });
     }
+
+    const ext = req.file
+      ? { 'application/pdf': '.pdf', 'image/png': '.png', 'image/jpeg': '.jpg' }[req.file.mimetype] || ''
+      : null;
 
     const row = await db.insertRfq({
       name: req.body.name.trim(),
@@ -140,10 +126,11 @@ router.post('/', rfqLimiter, handleUpload, async (req, res) => {
       budgetRange: (req.body.budgetRange || '').trim(),
       preferredContact: (req.body.preferredContact || '').trim(),
       bestTimeToCall: (req.body.bestTimeToCall || '').trim(),
-      attachmentFilename: req.file ? req.file.filename : null,
+      attachmentFilename: req.file ? crypto.randomBytes(20).toString('hex') + ext : null,
       attachmentOriginalName: req.file ? req.file.originalname.slice(0, 200) : null,
       attachmentMime: req.file ? req.file.mimetype : null,
       attachmentSize: req.file ? req.file.size : null,
+      attachmentData: req.file ? req.file.buffer : null,
     });
 
     return res.json({
@@ -152,7 +139,6 @@ router.post('/', rfqLimiter, handleUpload, async (req, res) => {
       id: row.id,
     });
   } catch (err) {
-    cleanupUpload();
     console.error('[rfq] Failed to save submission:', err);
     return res.status(500).json({
       success: false,

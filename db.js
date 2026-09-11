@@ -74,6 +74,19 @@ const SCHEMA_SQL = `
   ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS attachment_original_name TEXT;
   ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS attachment_mime TEXT;
   ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS attachment_size INTEGER;
+  ALTER TABLE rfq_requests ADD COLUMN IF NOT EXISTS attachment_data BYTEA;
+`;
+
+// Columns for list/export queries — deliberately excludes attachment_data
+// (can be several MB) so paging/searching/CSV export never has to pull
+// attachment bytes over the wire.
+const LIST_COLUMNS = `
+  id, name, email, phone, company, product_category,
+  bore, stroke, pressure, tonnage, message, status, created_at, updated_at,
+  quantity, timeline, application_details, budget_range,
+  preferred_contact, best_time_to_call,
+  attachment_filename, attachment_original_name, attachment_mime, attachment_size,
+  notes
 `;
 
 // Cached so concurrent requests during a cold start don't all race to
@@ -171,7 +184,7 @@ async function insertRfq({
   bore, stroke, pressure, tonnage, message,
   quantity, timeline, applicationDetails, budgetRange,
   preferredContact, bestTimeToCall,
-  attachmentFilename, attachmentOriginalName, attachmentMime, attachmentSize,
+  attachmentFilename, attachmentOriginalName, attachmentMime, attachmentSize, attachmentData,
 }) {
   const sql = `
     INSERT INTO rfq_requests
@@ -179,15 +192,16 @@ async function insertRfq({
        bore, stroke, pressure, tonnage, message,
        quantity, timeline, application_details, budget_range,
        preferred_contact, best_time_to_call,
-       attachment_filename, attachment_original_name, attachment_mime, attachment_size)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
+       attachment_filename, attachment_original_name, attachment_mime, attachment_size, attachment_data)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
     RETURNING id, created_at
   `;
   const values = [name, email, phone, company, productCategory,
     bore, stroke, pressure, tonnage, message,
     quantity || null, timeline || null, applicationDetails || null, budgetRange || null,
     preferredContact || null, bestTimeToCall || null,
-    attachmentFilename || null, attachmentOriginalName || null, attachmentMime || null, attachmentSize || null];
+    attachmentFilename || null, attachmentOriginalName || null, attachmentMime || null, attachmentSize || null,
+    attachmentData || null];
   return withRetry(async () => {
     const { rows } = await pool.query(sql, values);
     return rows[0];
@@ -242,7 +256,7 @@ async function getAllRfqs({
     const limitIdx = params.length + 1;
     const offsetIdx = params.length + 2;
     const { rows } = await pool.query(
-      `SELECT * FROM rfq_requests ${where}
+      `SELECT ${LIST_COLUMNS} FROM rfq_requests ${where}
        ORDER BY ${sortCol} ${sortDir}, id ${sortDir}
        LIMIT $${limitIdx} OFFSET $${offsetIdx}`,
       listParams
@@ -263,7 +277,7 @@ async function getAllRfqsForExport({ status = null, search = null } = {}) {
   return withRetry(async () => {
     const { where, params } = buildFilter({ status, search });
     const { rows } = await pool.query(
-      `SELECT * FROM rfq_requests ${where} ORDER BY created_at DESC`,
+      `SELECT ${LIST_COLUMNS} FROM rfq_requests ${where} ORDER BY created_at DESC`,
       params
     );
     return rows;
@@ -272,7 +286,22 @@ async function getAllRfqsForExport({ status = null, search = null } = {}) {
 
 async function getRfqById(id) {
   return withRetry(async () => {
-    const { rows } = await pool.query('SELECT * FROM rfq_requests WHERE id = $1', [id]);
+    const { rows } = await pool.query(`SELECT ${LIST_COLUMNS} FROM rfq_requests WHERE id = $1`, [id]);
+    return rows[0] || null;
+  });
+}
+
+/**
+ * Fetch just the attachment bytes + metadata for download — kept separate
+ * from getRfqById so listing/detail queries never pull attachment bytes.
+ */
+async function getRfqAttachment(id) {
+  return withRetry(async () => {
+    const { rows } = await pool.query(
+      `SELECT attachment_filename, attachment_original_name, attachment_mime, attachment_data
+       FROM rfq_requests WHERE id = $1`,
+      [id]
+    );
     return rows[0] || null;
   });
 }
@@ -341,23 +370,6 @@ async function deleteRfq(id) {
 }
 
 /**
- * Attachment filenames for a set of lead ids that actually have one —
- * fetched before a delete so the caller can clean up the files on disk
- * (the DB row alone doesn't know where `uploads/rfq/` lives).
- */
-async function getAttachmentFilenames(ids) {
-  const cleanIds = ids.map((id) => parseInt(id, 10)).filter(Number.isInteger);
-  if (cleanIds.length === 0) return [];
-  return withRetry(async () => {
-    const { rows } = await pool.query(
-      'SELECT attachment_filename FROM rfq_requests WHERE id = ANY($1::int[]) AND attachment_filename IS NOT NULL',
-      [cleanIds]
-    );
-    return rows.map((r) => r.attachment_filename);
-  });
-}
-
-/**
  * Counts per status, for the admin dashboard summary strip.
  */
 async function getRfqStatusCounts() {
@@ -417,12 +429,12 @@ module.exports = {
   getAllRfqs,
   getAllRfqsForExport,
   getRfqById,
+  getRfqAttachment,
   updateRfqStatus,
   updateRfqNotes,
   bulkUpdateStatus,
   bulkDelete,
   deleteRfq,
-  getAttachmentFilenames,
   getRfqStatusCounts,
   getRfqCategoryCounts,
   getRfqDailyCounts,
